@@ -1,0 +1,24 @@
+name = "planar_choosability"
+version = "0.1.0"
+defaultTargets = ["LeanPool", "Challenge", "Solution"]
+requiresModuleSystem = true
+
+[leanOptions]
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0-rc3"
+
+[[lean_lib]]
+name = "LeanPool"
+globs = ["LeanPool.+"]
+
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]

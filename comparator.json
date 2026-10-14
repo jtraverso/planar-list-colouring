@@ -1,0 +1,19 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "PlanarChoosability.isPlanar_iff_minorFree",
+    "PlanarChoosability.choosableWith_five_of_k5MinorFree",
+    "PlanarChoosability.choosableWith_five_of_isPlanar",
+    "PlanarChoosability.dpColourableWith_five_of_k5MinorFree",
+    "PlanarChoosability.dpColourableWith_five_of_isPlanar",
+    "PlanarChoosability.exists_isPlanar_not_choosableWith_four",
+    "PlanarChoosability.fourColour_iff_hadwigerFive",
+    "PlanarChoosability.isPlanar_K4",
+    "PlanarChoosability.not_isPlanar_K5",
+    "PlanarChoosability.not_isPlanar_K33"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}

@@ -1,0 +1,265 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Wagner's planarity criterion and list colouring of planar and K5-minor-free graphs"
+  description: >-
+    A Lean 4 / Mathlib formalization of classical results on planar graphs and graphs without a
+    K5 minor. (1) Wagner's theorem (1937): a finite graph is planar if and only if it has neither
+    K5 nor K3,3 as a minor. (2) Škrekovski's theorem (1998): every finite graph without a K5
+    minor is 5-choosable, proved along the route of Wood and Linusson, and Thomassen's theorem
+    (1994) that every finite planar graph is 5-choosable, as a corollary. (3) DP-colouring: every
+    finite graph without a K5 minor (Li–Wang, 2022), hence every finite planar graph
+    (Dvořák–Postle, 2018), is DP-5-colourable. (4) Voigt's theorem (1993): an explicit planar
+    graph on 238 vertices with lists of four colours has no proper list colouring, so 5 cannot be
+    lowered to 4; its planarity and non-colourability are checked by kernel reduction. (5) Wagner's
+    equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5 (neither side is
+    proved). Planarity is defined combinatorially, by rotation systems of genus zero (Euler
+    defect 0); as sanity checks K4 is planar and K5, K3,3 are not.
+  authors:
+    - "Juan Pablo Traverso Gianini"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Juan Pablo Traverso Gianini"
+
+classification:
+  arxiv: ["math.CO"]
+  msc2020: ["05C10", "05C15", "05C83"]
+
+sources:
+  - title: "Über eine Eigenschaft der ebenen Komplexe"
+    authors:
+      - "Klaus Wagner"
+    type: "paper"
+    location: "Mathematische Annalen 114 (1937), 570–590"
+    relationship: "formalizes"
+    note: >-
+      The minor characterization of planarity (no K5 and no K3,3 minor) and the equivalence of
+      the Four Colour Theorem with Hadwiger's conjecture for K5. The Lean proof of the
+      characterization goes through a decomposition of K5-minor-free and K3,3-minor-free graphs
+      along small clique separations and does not follow the original argument line by line.
+    license: "unknown"
+    author_endorsement: "n/a"
+  - title: "Sur le problème des courbes gauches en topologie"
+    authors:
+      - "Kazimierz Kuratowski"
+    type: "paper"
+    location: "Fundamenta Mathematicae 15 (1930), 271–283"
+    relationship: "background"
+    note: "Kuratowski's subdivision characterization of planarity; the subdivision form is not formalized here."
+    license: "unknown"
+    author_endorsement: "n/a"
+  - title: "Choosability of K5-minor-free graphs"
+    authors:
+      - "Riste Škrekovski"
+    id: "doi:10.1016/S0012-365X(98)00158-7"
+    type: "paper"
+    location: "Discrete Mathematics 190 (1998), 223–226"
+    relationship: "formalizes"
+    note: "Every K5-minor-free graph is 5-choosable; the Lean proof follows Wood–Linusson rather than the original argument."
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "Thomassen's Choosability Argument Revisited"
+    authors:
+      - "David R. Wood"
+      - "Svante Linusson"
+    id: "arXiv:1005.5194"
+    type: "paper"
+    location: "SIAM Journal on Discrete Mathematics 24 (2010), no. 4, 1632–1637"
+    relationship: "formalizes"
+    note: "Lemma 7 (list colouring with a prescribed clique and boundary lists) is formalized and used for the K5-minor-free theorem."
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "Every planar graph is 5-choosable"
+    authors:
+      - "Carsten Thomassen"
+    type: "paper"
+    location: "Journal of Combinatorial Theory, Series B 62 (1994), 180–181"
+    relationship: "formalizes"
+    note: "Obtained here as a corollary of the K5-minor-free theorem, since planar graphs have no K5 minor."
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "Correspondence coloring and its application to list-coloring planar graphs without cycles of lengths 4 to 8"
+    authors:
+      - "Zdeněk Dvořák"
+      - "Luke Postle"
+    type: "paper"
+    location: "Journal of Combinatorial Theory, Series B 129 (2018), 38–54"
+    relationship: "formalizes"
+    note: "Introduces correspondence (DP) colouring and observes that planar graphs are DP-5-colourable."
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "An extension of Thomassen's result on choosability"
+    authors:
+      - "Lingxi Li"
+      - "Tao Wang"
+    id: "arXiv:2111.15220"
+    type: "paper"
+    location: "Applied Mathematics and Computation 425 (2022), 127100"
+    relationship: "formalizes"
+    note: "Every K5-minor-free graph is DP-5-colourable (the K3,3-minor-free case is not included in this entry)."
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "List colourings of planar graphs"
+    authors:
+      - "Margit Voigt"
+    id: "doi:10.1016/0012-365X(93)90579-I"
+    type: "paper"
+    location: "Discrete Mathematics 120 (1993), 215–219"
+    relationship: "formalizes"
+    note: >-
+      A planar graph that is not 4-choosable. The Lean development uses an explicit 238-vertex
+      graph, a rotation system for it and explicit lists of four colours, checked by kernel
+      reduction (`decide +kernel`, no `native_decide`).
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "A combinatorial representation for polyhedral surfaces"
+    authors:
+      - "Jack Edmonds"
+    type: "paper"
+    location: "Notices of the American Mathematical Society 7 (1960), 646"
+    relationship: "background"
+    note: "Rotation systems; their equivalence with sphere embeddings is not formalized here."
+    license: "unknown"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "PALOMAR-2026-10-13-000005 (jtraverso/grotzsch-ore)"
+    relationship: "related"
+    note: >-
+      The same author's Grötzsch / Grünbaum–Aksenov entry uses 22 modules of the same planarity
+      library and the same definition of planarity (rotation systems of genus zero).
+
+status:
+  scope: >-
+    Proved for finite simple graphs (vertex types in any universe; Voigt's example on Fin 238):
+    Wagner's characterization of planarity by excluded K5 and K3,3 minors, 5-choosability and
+    DP-5-colourability of K5-minor-free graphs and of planar graphs, a planar graph that is not
+    4-choosable, and the equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5
+    (neither of which is proved). Planarity means the existence of a genus-zero rotation system;
+    its equivalence with topological embeddability in the sphere is classical but not formalized.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "autonomous"
+      models: ["Aristotle (Harmonic)"]
+      framework: "Aristotle CLI"
+      tool_setup: >-
+        Most proofs of the library (the Wood–Linusson extension lemma, the K5- and
+        K3,3-minor-free decompositions behind Wagner's theorem, Voigt's certificate) were produced
+        by Aristotle over several rounds from the author's statements and proof plans; every
+        return was audited (statements unchanged, no added axioms) and rebuilt locally.
+      cost:
+        wall_time: "several days over multiple rounds"
+        spend_usd: "not tracked"
+        hardware: "API-only"
+      prompting_notes: "Formal statements, task descriptions and proof plans supplied for each round."
+    - method: "agent"
+      models: ["Claude Opus 5.5"]
+      framework: "Claude Code (Anthropic)"
+      tool_setup: >-
+        Statement design, integration and review of the rounds, and the Palomar packaging
+        (Challenge with copied definitions of planarity, minors, list and DP colouring; Solution
+        with bridges to the library), checked with `lake build` and `#print axioms` (Lean
+        v4.35.0-rc3, Mathlib c55e6e786f49471c72fbddbec5415808896aec1e).
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: "Natural-language instructions in Spanish, directed by the author."
+  spend_usd: "subscription-based"
+  notes: >-
+    The results, routes and statements were chosen by the human author; the Lean proofs are
+    AI-generated and mechanically verified (no `sorry`, axioms limited to propext,
+    Classical.choice and Quot.sound, identical elaborated types for each Challenge/Solution
+    pair). One library file (`Wagner/K33AttachmentAttack.lean`) raises `maxHeartbeats` for two
+    declarations. Some module docstrings record the history of the development (for instance the
+    header of `Wagner/WagnerB.lean` describes an earlier conditional stage); the closing exports
+    are in `Wagner/WagnerV8Core.lean` and `Wagner/WagnerA.lean`, and the statements here depend on
+    no unproved hypothesis.
+
+fidelity:
+  divergences: >-
+    Planarity is the combinatorial notion (genus-zero rotation system), not a topological
+    embedding; the classical equivalence is not formalized. Minors are given by branch-set models
+    (disjoint nonempty connected branch sets with edges between the branch sets of adjacent
+    vertices). List colourings use an arbitrary colour type; DP-colourings use a correspondence
+    given as a symmetric family of partial matchings between colours for every pair of vertices.
+    Voigt's theorem is stated as the existence of a finite planar graph that is not 4-choosable
+    (with colours in ℕ).
+
+review:
+  status: "agent-reviewed"
+  reviewers:
+    - "Claude Opus 5.5 (AI agent in Claude Code, acting for the author)"
+  notes: >-
+    Agent review by Claude Opus 5.5, distinct from the mechanical verification: the agent compared
+    each Challenge statement with the cited sources, checked the copied definitions of planarity,
+    minors, list colouring and DP-colouring against the library through explicit bridge lemmas,
+    checked that the 69 vendored modules are byte-identical to the integrated library sources, and
+    confirmed by `lake build`, `#print axioms` and a comparison of the fully elaborated Challenge
+    and Solution types that the proofs use no `sorry` and only propext, Classical.choice and
+    Quot.sound. The Aristotle returns that produced the library were audited by diff when they
+    were integrated. The author directed the work and approved the statements. No independent
+    human mathematical review has been performed. The results are classical and no mathematical
+    novelty is claimed.
+
+alignment:
+  namespace: "PlanarChoosability"
+  statements:
+    - source: "Wagner (1937)"
+      lean: "PlanarChoosability.isPlanar_iff_minorFree"
+      module: "Challenge"
+      status: "proved"
+      note: "A finite graph is planar iff it has no K5 minor and no K3,3 minor."
+    - source: "Škrekovski (1998)"
+      lean: "PlanarChoosability.choosableWith_five_of_k5MinorFree"
+      module: "Challenge"
+      status: "proved"
+      note: "K5-minor-free finite graphs are 5-choosable."
+    - source: "Thomassen (1994)"
+      lean: "PlanarChoosability.choosableWith_five_of_isPlanar"
+      module: "Challenge"
+      status: "proved"
+      note: "Finite planar graphs are 5-choosable."
+    - source: "Li–Wang (2022)"
+      lean: "PlanarChoosability.dpColourableWith_five_of_k5MinorFree"
+      module: "Challenge"
+      status: "proved"
+      note: "K5-minor-free finite graphs are DP-5-colourable."
+    - source: "Dvořák–Postle (2018)"
+      lean: "PlanarChoosability.dpColourableWith_five_of_isPlanar"
+      module: "Challenge"
+      status: "proved"
+      note: "Finite planar graphs are DP-5-colourable."
+    - source: "Voigt (1993)"
+      lean: "PlanarChoosability.exists_isPlanar_not_choosableWith_four"
+      module: "Challenge"
+      status: "proved"
+      note: "Some finite planar graph is not 4-choosable."
+    - source: "Wagner (1937), 4CT and Hadwiger(5)"
+      lean: "PlanarChoosability.fourColour_iff_hadwigerFive"
+      module: "Challenge"
+      status: "proved"
+      note: "Planar graphs are 4-colourable iff K5-minor-free graphs are (neither side proved)."
+    - source: "Sanity check of the planarity definition"
+      lean: "PlanarChoosability.isPlanar_K4"
+      module: "Challenge"
+      status: "proved"
+      note: "K4 is planar."
+    - source: "Sanity check of the planarity definition (Kuratowski graphs)"
+      lean: "PlanarChoosability.not_isPlanar_K5"
+      module: "Challenge"
+      status: "proved"
+      note: "K5 is not planar."
+    - source: "Sanity check of the planarity definition (Kuratowski graphs)"
+      lean: "PlanarChoosability.not_isPlanar_K33"
+      module: "Challenge"
+      status: "proved"
+      note: "K3,3 is not planar."
+
+acknowledgements: >-
+  Mathlib and the Lean community; Harmonic's Aristotle.
