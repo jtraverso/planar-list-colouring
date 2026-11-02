@@ -11,10 +11,11 @@ public import LeanPool.K5MinorFreeChoosability.Wagner.WagnerGraph
 /-!
 # Wagner's structure theorem for `K_5`-minor-free graphs: certificate and reductions
 
-**Status: the existence direction is CONDITIONAL on one explicitly stated lemma
-(`WagnerPrimeCore`, equivalently its classical edge-maximal form `WagnerMaximalCore`), which is
-OPEN.**  Everything in this file is proved without `sorry`; the conditional results take the
-missing lemma as an explicit hypothesis and are scaffolding, not closure.
+This file proves the existence direction conditionally on one explicitly stated lemma
+(`WagnerPrimeCore`, equivalently its classical edge-maximal form `WagnerMaximalCore`); that lemma
+is proved in `Wagner/WagnerV8Core.lean` (`wagnerPrimeCore`, `wagnerMaximalCore`), which also
+exports the unconditional structure theorem `k5MinorFree_iff_exists_k5Decomp_wagner`. Everything
+in this file is proved without `sorry`.
 
 Definitions.
 
@@ -26,7 +27,7 @@ Definitions.
 * `IsGoodSep H S A B`: a separation of `S` of order at most three, both private parts nonempty,
   whose two clique-completed sides `pieceGraph H A (A ∩ B)`, `pieceGraph H B (A ∩ B)` are
   `K_5`-minor-free.
-* `WagnerPrimeCore V` (OPEN): every nonplanar `K_5`-minor-free graph without separations of order
+* `WagnerPrimeCore V` (proved in `WagnerV8Core.lean`): every nonplanar `K_5`-minor-free graph without separations of order
   at most two is a `V₈`-piece or has a good separation.
 
 Unconditional results.

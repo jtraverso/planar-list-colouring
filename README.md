@@ -14,9 +14,15 @@ This repository formalizes, for finite simple graphs in Lean 4 with Mathlib:
    proper list colouring, so planar graphs need not be 4-choosable.
 5. **Wagner (1937).** The Four Colour Theorem is equivalent to Hadwiger's conjecture for `K₅`
    (neither side is proved).
+6. **Wagner (1937), structure of `K₅`-minor-free graphs** (version 2). A finite graph has no `K₅`
+   minor if and only if it is a spanning subgraph of a graph obtained by clique-sums of order at
+   most three from planar graphs and copies of the Wagner graph `V₈`
+   (`PlanarChoosability.k5MinorFree_iff_exists_k5Decomp`; proved in
+   `Wagner/WagnerV8Core.lean`).
 
 The audited statements are in [`Challenge.lean`](Challenge.lean), which imports only Mathlib and
-contains the definitions of planarity, minors, list colouring and DP-colouring; the proofs are in
+contains the definitions of planarity, minors, list colouring, DP-colouring and the clique-sum
+certificate `K5Decomp`; the proofs are in
 [`Solution.lean`](Solution.lean). [`comparator.json`](comparator.json) lists the compared
 theorems, [`MATHLIB_DEFINITIONS.md`](MATHLIB_DEFINITIONS.md) reproduces verbatim the Mathlib
 definitions used by the statements, and [`formalization.yaml`](formalization.yaml) records

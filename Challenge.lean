@@ -27,6 +27,11 @@ This file states, for finite simple graphs:
 6. **Wagner (1937).** The Four Colour Theorem is equivalent to Hadwiger's conjecture for `K₅`:
    all finite planar graphs are 4-colourable if and only if all finite graphs without a `K₅` minor
    are (`PlanarChoosability.fourColour_iff_hadwigerFive`). Neither side is proved.
+7. **Wagner (1937), structure of `K₅`-minor-free graphs.** A finite graph has no `K₅` minor if and
+   only if it is a spanning subgraph of a graph built by clique-sums of order at most three
+   (keeping the clique edges) from planar graphs and copies of the Wagner graph `V₈`
+   (`PlanarChoosability.k5MinorFree_iff_exists_k5Decomp`, with the certificate `K5Decomp`).
+   Added in version 2.
 
 ## Planarity
 
@@ -170,6 +175,46 @@ def K33MinorFree (G : SimpleGraph V) : Prop :=
 
 end Minors
 
+/-! ### Clique-sums: Wagner's structure of `K₅`-minor-free graphs -/
+
+section WagnerStructure
+
+variable {V : Type*}
+
+/-- The graph `G` with all edges leaving `s` removed. -/
+def restrict (G : SimpleGraph V) (s : Set V) : SimpleGraph V where
+  Adj a b := G.Adj a b ∧ a ∈ s ∧ b ∈ s
+  symm := ⟨fun _ _ h => ⟨h.1.symm, h.2.2, h.2.1⟩⟩
+  loopless := ⟨fun _ h => G.irrefl h.1⟩
+
+/-- The Wagner graph `V₈` (the Möbius ladder on eight vertices): vertices `Fin 8`, `i ~ j` iff
+`j - i ∈ {1, 4, 7}` modulo `8`. -/
+def wagnerGraph : SimpleGraph (Fin 8) :=
+  SimpleGraph.fromRel fun i j => (j - i).val = 1 ∨ (j - i).val = 4
+
+/-- `H[S]` is a spanning subgraph of a copy of the Wagner graph on the vertex set `S`: an
+injection `f : Fin 8 → V` onto `S` such that every edge of `H` between vertices of `S` is the
+image of an edge of `V₈`. -/
+def IsWagnerPiece (H : SimpleGraph V) (S : Finset V) : Prop :=
+  ∃ f : Fin 8 → V, Function.Injective f ∧ (∀ i, f i ∈ S) ∧ (∀ v ∈ S, ∃ i, f i = v) ∧
+    ∀ i j, H.Adj (f i) (f j) → wagnerGraph.Adj i j
+
+variable [DecidableEq V]
+
+/-- **Wagner certificate** on the vertex set `S` of `H`. Leaves are planar pieces or `V₈`-pieces;
+internal nodes glue two pieces `A`, `B` (neither containing the other) along a retained clique
+`A ∩ B` of order at most three, with no edges of `H` between `A \ B` and `B \ A` (clique-sums of
+order at most three whose separator edges are kept). -/
+inductive K5Decomp (H : SimpleGraph V) : Finset V → Prop
+  | planar {S : Finset V} : IsPlanar (restrict H ↑S) → K5Decomp H S
+  | wagner {S : Finset V} : IsWagnerPiece H S → K5Decomp H S
+  | glue {A B : Finset V} : ¬ A ⊆ B → ¬ B ⊆ A → (A ∩ B).card ≤ 3 →
+      (∀ u ∈ A ∩ B, ∀ v ∈ A ∩ B, u ≠ v → H.Adj u v) →
+      (∀ u ∈ A, u ∉ B → ∀ v ∈ B, v ∉ A → ¬ H.Adj u v) →
+      K5Decomp H A → K5Decomp H B → K5Decomp H (A ∪ B)
+
+end WagnerStructure
+
 /-! ### List colouring and DP-colouring -/
 
 section Colouring
@@ -245,6 +290,15 @@ without a `K₅` minor are 4-colourable. -/
 theorem fourColour_iff_hadwigerFive :
     (∀ (W : Type u) [Finite W] (G : SimpleGraph W), IsPlanar G → G.Colorable 4) ↔
       (∀ (W : Type u) [Finite W] (G : SimpleGraph W), K5MinorFree G → G.Colorable 4) := by
+  sorry
+
+/-! ### Wagner's structure theorem -/
+
+/-- **Wagner (1937).** A finite graph has no `K₅` minor if and only if it is a spanning subgraph of
+a graph obtained by clique-sums of order at most three from planar graphs and copies of the Wagner
+graph `V₈`. -/
+theorem k5MinorFree_iff_exists_k5Decomp {V : Type*} [Fintype V] [DecidableEq V]
+    (G : SimpleGraph V) : K5MinorFree G ↔ ∃ H : SimpleGraph V, G ≤ H ∧ K5Decomp H Finset.univ := by
   sorry
 
 end PlanarChoosability

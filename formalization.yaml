@@ -14,7 +14,10 @@ project:
     graph on 238 vertices with lists of four colours has no proper list colouring, so 5 cannot be
     lowered to 4; its planarity and non-colourability are checked by kernel reduction. (5) Wagner's
     equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5 (neither side is
-    proved). Planarity is defined combinatorially, by rotation systems of genus zero (Euler
+    proved). (6) Wagner's structure theorem (1937, added in version 2): a finite graph has no K5
+    minor if and only if it is a spanning subgraph of a graph obtained by clique-sums of order at
+    most three, keeping the clique edges, from planar graphs and copies of the Wagner graph V8.
+    Planarity is defined combinatorially, by rotation systems of genus zero (Euler
     defect 0); as sanity checks K4 is planar and K5, K3,3 are not.
   authors:
     - "Juan Pablo Traverso Gianini"
@@ -34,8 +37,9 @@ sources:
     location: "Mathematische Annalen 114 (1937), 570–590"
     relationship: "formalizes"
     note: >-
-      The minor characterization of planarity (no K5 and no K3,3 minor) and the equivalence of
-      the Four Colour Theorem with Hadwiger's conjecture for K5. The Lean proof of the
+      The minor characterization of planarity (no K5 and no K3,3 minor), the structure of
+      K5-minor-free graphs as clique-sums of order at most three of planar graphs and V8 (version
+      2), and the equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5. The Lean proof of the
       characterization goes through a decomposition of K5-minor-free and K3,3-minor-free graphs
       along small clique separations and does not follow the original argument line by line.
     license: "unknown"
@@ -135,8 +139,9 @@ status:
     Proved for finite simple graphs (vertex types in any universe; Voigt's example on Fin 238):
     Wagner's characterization of planarity by excluded K5 and K3,3 minors, 5-choosability and
     DP-5-colourability of K5-minor-free graphs and of planar graphs, a planar graph that is not
-    4-choosable, and the equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5
-    (neither of which is proved). Planarity means the existence of a genus-zero rotation system;
+    4-choosable, Wagner's clique-sum structure of K5-minor-free graphs (version 2), and the
+    equivalence of the Four Colour Theorem with Hadwiger's conjecture for K5 (neither of which is
+    proved). Planarity means the existence of a genus-zero rotation system;
     its equivalence with topological embeddability in the sphere is classical but not formalized.
   sorry_count: 0
   sorry_in_definitions: 0
@@ -176,10 +181,13 @@ automation:
     AI-generated and mechanically verified (no `sorry`, axioms limited to propext,
     Classical.choice and Quot.sound, identical elaborated types for each Challenge/Solution
     pair). One library file (`Wagner/K33AttachmentAttack.lean`) raises `maxHeartbeats` for two
-    declarations. Some module docstrings record the history of the development (for instance the
-    header of `Wagner/WagnerB.lean` describes an earlier conditional stage); the closing exports
-    are in `Wagner/WagnerV8Core.lean` and `Wagner/WagnerA.lean`, and the statements here depend on
-    no unproved hypothesis.
+    declarations. Some module docstrings record the history of the development; in version 2 the
+    header of `Wagner/WagnerB.lean`, which described its lemma `WagnerPrimeCore` as open, was
+    corrected to point to its proof in `Wagner/WagnerV8Core.lean` (a comment-only change). The
+    closing exports are in `Wagner/WagnerV8Core.lean` and `Wagner/WagnerA.lean`, and the statements
+    here depend on no unproved hypothesis. Version 2 (the structure theorem, its certificate
+    definitions copied into the Challenge, and the bridges in the Solution) was prepared by
+    Claude Opus 5.5.
 
 fidelity:
   divergences: >-
@@ -189,7 +197,11 @@ fidelity:
     vertices). List colourings use an arbitrary colour type; DP-colourings use a correspondence
     given as a symmetric family of partial matchings between colours for every pair of vertices.
     Voigt's theorem is stated as the existence of a finite planar graph that is not 4-choosable
-    (with colours in ℕ).
+    (with colours in ℕ). In Wagner's structure theorem the pieces are arbitrary planar graphs (not
+    necessarily maximal) and V8-pieces are spanning subgraphs of copies of V8; the clique-sum
+    certificate K5Decomp keeps the separator clique and the graph is a spanning subgraph of the
+    certified one. The Wagner graph is defined with SimpleGraph.fromRel (i ~ j iff j − i is 1 or
+    4 modulo 8, or the reverse).
 
 review:
   status: "agent-reviewed"
@@ -198,8 +210,9 @@ review:
   notes: >-
     Agent review by Claude Opus 5.5, distinct from the mechanical verification: the agent compared
     each Challenge statement with the cited sources, checked the copied definitions of planarity,
-    minors, list colouring and DP-colouring against the library through explicit bridge lemmas,
-    checked that the 69 vendored modules are byte-identical to the integrated library sources, and
+    minors, list colouring, DP-colouring and the Wagner certificate against the library through
+    explicit bridge lemmas, checked that the 69 vendored modules are byte-identical to the
+    integrated library sources (up to the comment-only correction of version 2), and
     confirmed by `lake build`, `#print axioms` and a comparison of the fully elaborated Challenge
     and Solution types that the proofs use no `sorry` and only propext, Classical.choice and
     Quot.sound. The Aristotle returns that produced the library were audited by diff when they
@@ -215,6 +228,11 @@ alignment:
       module: "Challenge"
       status: "proved"
       note: "A finite graph is planar iff it has no K5 minor and no K3,3 minor."
+    - source: "Wagner (1937), structure of K5-minor-free graphs"
+      lean: "PlanarChoosability.k5MinorFree_iff_exists_k5Decomp"
+      module: "Challenge"
+      status: "proved"
+      note: "K5-minor-free iff spanning subgraph of a clique-sum (order ≤ 3) of planar graphs and V8 (version 2)."
     - source: "Škrekovski (1998)"
       lean: "PlanarChoosability.choosableWith_five_of_k5MinorFree"
       module: "Challenge"

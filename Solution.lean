@@ -13,6 +13,7 @@ public import LeanPool.K5MinorFreeChoosability.Planar.Examples
 public import LeanPool.K5MinorFreeChoosability.Planar.Nonplanar
 public import LeanPool.K5MinorFreeChoosability.Voigt.Theorem
 public import LeanPool.K5MinorFreeChoosability.Frontier.WagnerCorollaries
+public import LeanPool.K5MinorFreeChoosability.Wagner.WagnerV8Core
 
 /-!
 # Proofs of the statements in `Challenge.lean`
@@ -116,6 +117,46 @@ def K33MinorFree (G : SimpleGraph V) : Prop :=
   ¬ IsMinor (completeBipartiteGraph (Fin 3) (Fin 3)) G
 
 end Minors
+
+/-! ### Clique-sums: Wagner's structure of `K₅`-minor-free graphs -/
+
+section WagnerStructure
+
+variable {V : Type*}
+
+/-- The graph `G` with all edges leaving `s` removed. -/
+def restrict (G : SimpleGraph V) (s : Set V) : SimpleGraph V where
+  Adj a b := G.Adj a b ∧ a ∈ s ∧ b ∈ s
+  symm := ⟨fun _ _ h => ⟨h.1.symm, h.2.2, h.2.1⟩⟩
+  loopless := ⟨fun _ h => G.irrefl h.1⟩
+
+/-- The Wagner graph `V₈` (the Möbius ladder on eight vertices): vertices `Fin 8`, `i ~ j` iff
+`j - i ∈ {1, 4, 7}` modulo `8`. -/
+def wagnerGraph : SimpleGraph (Fin 8) :=
+  SimpleGraph.fromRel fun i j => (j - i).val = 1 ∨ (j - i).val = 4
+
+/-- `H[S]` is a spanning subgraph of a copy of the Wagner graph on the vertex set `S`: an
+injection `f : Fin 8 → V` onto `S` such that every edge of `H` between vertices of `S` is the
+image of an edge of `V₈`. -/
+def IsWagnerPiece (H : SimpleGraph V) (S : Finset V) : Prop :=
+  ∃ f : Fin 8 → V, Function.Injective f ∧ (∀ i, f i ∈ S) ∧ (∀ v ∈ S, ∃ i, f i = v) ∧
+    ∀ i j, H.Adj (f i) (f j) → wagnerGraph.Adj i j
+
+variable [DecidableEq V]
+
+/-- **Wagner certificate** on the vertex set `S` of `H`. Leaves are planar pieces or `V₈`-pieces;
+internal nodes glue two pieces `A`, `B` (neither containing the other) along a retained clique
+`A ∩ B` of order at most three, with no edges of `H` between `A \ B` and `B \ A` (clique-sums of
+order at most three whose separator edges are kept). -/
+inductive K5Decomp (H : SimpleGraph V) : Finset V → Prop
+  | planar {S : Finset V} : IsPlanar (restrict H ↑S) → K5Decomp H S
+  | wagner {S : Finset V} : IsWagnerPiece H S → K5Decomp H S
+  | glue {A B : Finset V} : ¬ A ⊆ B → ¬ B ⊆ A → (A ∩ B).card ≤ 3 →
+      (∀ u ∈ A ∩ B, ∀ v ∈ A ∩ B, u ≠ v → H.Adj u v) →
+      (∀ u ∈ A, u ∉ B → ∀ v ∈ B, v ∉ A → ¬ H.Adj u v) →
+      K5Decomp H A → K5Decomp H B → K5Decomp H (A ∪ B)
+
+end WagnerStructure
 
 /-! ### List colouring and DP-colouring -/
 
@@ -266,5 +307,50 @@ theorem fourColour_iff_hadwigerFive :
   · intro hK W _ G hG
     exact h.2 (fun W _ G hG' => hK W G ((k5MinorFree_iff_lib G).2 hG')) W G
       ((isPlanar_iff_lib G).1 hG)
+
+/-! ### Wagner's structure theorem -/
+
+theorem restrict_eq_lib {V : Type*} (G : SimpleGraph V) (s : Set V) :
+    restrict G s = LeanPool.K5MinorFreeChoosability.restrict G s := by
+  ext a b
+  exact Iff.rfl
+
+theorem wagnerGraph_eq_lib : wagnerGraph = LeanPool.K5MinorFreeChoosability.wagnerGraph := by
+  ext i j
+  rw [wagnerGraph, SimpleGraph.fromRel_adj]
+  show _ ↔ ((j - i).val = 1 ∨ (j - i).val = 4 ∨ (j - i).val = 7)
+  revert i j
+  decide
+
+theorem isWagnerPiece_iff_lib {V : Type*} (H : SimpleGraph V) (S : Finset V) :
+    IsWagnerPiece H S ↔ LeanPool.K5MinorFreeChoosability.IsWagnerPiece H S := by
+  rw [IsWagnerPiece, LeanPool.K5MinorFreeChoosability.IsWagnerPiece, wagnerGraph_eq_lib]
+
+theorem k5Decomp_iff_lib {V : Type*} [DecidableEq V] (H : SimpleGraph V) (S : Finset V) :
+    K5Decomp H S ↔ LeanPool.K5MinorFreeChoosability.K5Decomp H S := by
+  constructor
+  · intro h
+    induction h with
+    | planar hp =>
+      exact LeanPool.K5MinorFreeChoosability.K5Decomp.planar
+        (by rwa [restrict_eq_lib, isPlanar_iff_lib] at hp)
+    | wagner hw =>
+      exact LeanPool.K5MinorFreeChoosability.K5Decomp.wagner ((isWagnerPiece_iff_lib _ _).1 hw)
+    | glue hAB hBA hc hcl hnc _ _ ihA ihB =>
+      exact LeanPool.K5MinorFreeChoosability.K5Decomp.glue hAB hBA hc hcl hnc ihA ihB
+  · intro h
+    induction h with
+    | planar hp =>
+      exact K5Decomp.planar (by rwa [restrict_eq_lib, isPlanar_iff_lib])
+    | wagner hw => exact K5Decomp.wagner ((isWagnerPiece_iff_lib _ _).2 hw)
+    | glue hAB hBA hc hcl hnc _ _ ihA ihB => exact K5Decomp.glue hAB hBA hc hcl hnc ihA ihB
+
+/-- **Wagner (1937).** A finite graph has no `K₅` minor if and only if it is a spanning subgraph of
+a graph obtained by clique-sums of order at most three from planar graphs and copies of the Wagner
+graph `V₈`. -/
+theorem k5MinorFree_iff_exists_k5Decomp {V : Type*} [Fintype V] [DecidableEq V]
+    (G : SimpleGraph V) : K5MinorFree G ↔ ∃ H : SimpleGraph V, G ≤ H ∧ K5Decomp H Finset.univ := by
+  rw [k5MinorFree_iff_lib, LeanPool.K5MinorFreeChoosability.k5MinorFree_iff_exists_k5Decomp_wagner]
+  simp only [k5Decomp_iff_lib]
 
 end PlanarChoosability

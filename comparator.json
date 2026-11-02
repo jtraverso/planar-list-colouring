@@ -3,6 +3,7 @@
   "solution_module": "Solution",
   "theorem_names": [
     "PlanarChoosability.isPlanar_iff_minorFree",
+    "PlanarChoosability.k5MinorFree_iff_exists_k5Decomp",
     "PlanarChoosability.choosableWith_five_of_k5MinorFree",
     "PlanarChoosability.choosableWith_five_of_isPlanar",
     "PlanarChoosability.dpColourableWith_five_of_k5MinorFree",
@@ -14,6 +15,10 @@
     "PlanarChoosability.not_isPlanar_K33"
   ],
   "definition_names": [],
-  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
   "enable_nanoda": true
 }
